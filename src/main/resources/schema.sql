@@ -174,3 +174,22 @@ create table users
     avatar    varchar(500) NULL DEFAULT NULL,
     status    status       null default '0'
 );
+
+drop table if exists address_book;
+create table address_book
+(
+    id              bigserial    not null primary key,
+    user_id         bigint       not null,
+    consignee       varchar(32)  not null,
+    phone           varchar(11)  not null,
+    sex             sex          not null,
+
+    detail          varchar(256) null     default null,
+    label           varchar(32)  null     default null,
+    default_address boolean      not null default false,
+    deleted         boolean      not null default false,
+    create_time     TIMESTAMP    null     default null,
+    update_time     TIMESTAMP    null     default null,
+    create_user     bigint       null     default null,
+    update_user     bigint       null     default null
+);

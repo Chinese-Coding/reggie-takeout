@@ -27,10 +27,12 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         log.info("公共字段自动填充 [insert]...");
         metaObject.setValue("createTime", LocalDateTime.now());
         metaObject.setValue("updateTime", LocalDateTime.now());
-        var employeeId = (Long) session.getAttribute("employee");
-        if (employeeId != null) {
-            metaObject.setValue("createUser", employeeId);
-            metaObject.setValue("updateUser", employeeId);
+        var id = (Long) session.getAttribute("employee");
+        if (id == null)
+            id = (Long) session.getAttribute("user");
+        if (id != null) {
+            metaObject.setValue("createUser", id);
+            metaObject.setValue("updateUser", id);
         }
     }
 
@@ -41,8 +43,10 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     public void updateFill(MetaObject metaObject) {
         log.info("公共字段自动填充 [update]...");
         metaObject.setValue("updateTime", LocalDateTime.now());
-        var employeeId = (Long) session.getAttribute("employee");
-        if (employeeId != null)
-            metaObject.setValue("updateUser", employeeId);
+        var id = (Long) session.getAttribute("employee");
+        if (id == null)
+            id = (Long) session.getAttribute("user");
+        if (id != null)
+            metaObject.setValue("updateUser", id);
     }
 }
