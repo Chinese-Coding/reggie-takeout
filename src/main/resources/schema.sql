@@ -162,3 +162,15 @@ comment on column set_meal_dish.name is '菜品名称 (冗余字段)';
 comment on column set_meal_dish.price is '菜品原件 (冗余字段)';
 comment on column set_meal_dish.copies is '份数';
 comment on column set_meal_dish.deleted is '是否删除, 逻辑删除';
+
+drop table if exists users;
+create table users
+(
+    id        bigserial    not null primary key,
+    name      varchar(32)  null default null,
+    phone     VARCHAR(11)  NOT NULL,
+    sex       sex          null default null,
+    id_number varchar(18)  NULL DEFAULT NULL,
+    avatar    varchar(500) NULL DEFAULT NULL,
+    status    status       null default '0'
+);

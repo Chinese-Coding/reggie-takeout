@@ -32,7 +32,6 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
             metaObject.setValue("createUser", employeeId);
             metaObject.setValue("updateUser", employeeId);
         }
-
     }
 
     /**

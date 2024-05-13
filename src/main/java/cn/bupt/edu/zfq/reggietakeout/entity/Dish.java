@@ -3,10 +3,7 @@ package cn.bupt.edu.zfq.reggietakeout.entity;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
-import org.apache.ibatis.type.JdbcType;
 
-import java.io.Serial;
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
