@@ -1,9 +1,12 @@
 package cn.bupt.edu.zfq.reggietakeout.controller;
 
 import cn.bupt.edu.zfq.reggietakeout.common.R;
+import cn.bupt.edu.zfq.reggietakeout.entity.Category;
 import cn.bupt.edu.zfq.reggietakeout.entity.Dish;
+import cn.bupt.edu.zfq.reggietakeout.entity.DishFlavor;
 import cn.bupt.edu.zfq.reggietakeout.entity.dto.DishDto;
 import cn.bupt.edu.zfq.reggietakeout.service.CategoryService;
+import cn.bupt.edu.zfq.reggietakeout.service.DishFlavorService;
 import cn.bupt.edu.zfq.reggietakeout.service.DishService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -24,6 +28,9 @@ public class DishController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private DishFlavorService dishFlavorService;
 
     @GetMapping("/page")
     public R<Page> page(int page, int pageSize, String name) {
@@ -114,12 +121,36 @@ public class DishController {
      * 获取同一分类下的菜品信息, 使用 `Dish` 接收参数, 而不简简单单的使用 `Long` 接收一个 `categoryId`. 这样做, 据视频所说更通用一些
      */
     @GetMapping("/list")
-    public R<List<Dish>> list(Dish dish) {
+    public R<List<DishDto>> list(Dish dish) {
+        // 结果返回对象
+        List<DishDto> dishDtoList;
+
         var lqw = new LambdaQueryWrapper<Dish>();
         lqw.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
-        lqw.eq(Dish::getStatus, 1); // 起售才能查询
+        lqw.eq(Dish::getStatus, 1);
         lqw.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
-        var list = dishService.list(lqw);
-        return R.success(list);
+
+        var dishList = dishService.list(lqw);
+        //分类id
+        //根据当前菜品的id查询菜品表下dishId对应的菜品
+        var list = new ArrayList<DishDto>();
+        for (var item : dishList) {
+            var dishDto = new DishDto();
+            BeanUtils.copyProperties(item, dishDto);
+            var categoryId = item.getCategoryId();//分类id
+            var category = categoryService.getById(categoryId);
+            if (category != null)
+                dishDto.setCategoryName(category.getName());
+
+            // 根据当前菜品的id查询菜品表下dishId对应的菜品
+            var dishId = item.getId();
+            var dishFlavorLqw = new LambdaQueryWrapper<DishFlavor>();
+            dishFlavorLqw.eq(DishFlavor::getDishId, dishId);
+            dishDto.setFlavors(dishFlavorService.list(dishFlavorLqw));
+            list.add(dishDto);
+        }
+        dishDtoList = list;
+
+        return R.success(dishDtoList);
     }
 }

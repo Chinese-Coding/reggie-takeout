@@ -3,8 +3,10 @@ package cn.bupt.edu.zfq.reggietakeout.controller;
 
 import cn.bupt.edu.zfq.reggietakeout.common.R;
 import cn.bupt.edu.zfq.reggietakeout.entity.SetMeal;
+import cn.bupt.edu.zfq.reggietakeout.entity.SetMealDish;
 import cn.bupt.edu.zfq.reggietakeout.entity.dto.SetMealDto;
 import cn.bupt.edu.zfq.reggietakeout.service.CategoryService;
+import cn.bupt.edu.zfq.reggietakeout.service.SetMealDishService;
 import cn.bupt.edu.zfq.reggietakeout.service.SetMealService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -24,6 +26,9 @@ public class SetMealController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private SetMealDishService setMealDishService;
 
     /**
      * 新增套餐
@@ -108,5 +113,28 @@ public class SetMealController {
         log.info("获取套餐Id {}", id);
         var setMealDto = setMealService.getSetMealWithDish(id);
         return R.success(setMealDto);
+    }
+
+    /**
+     * 在消费者端 展示套餐信息
+     */
+    @GetMapping("/list")
+    public R<List<SetMeal>> list(SetMeal setMeal) {
+        var lqw = new LambdaQueryWrapper<SetMeal>();
+        var categoryId = setMeal.getCategoryId();
+        lqw.eq(categoryId != null, SetMeal::getCategoryId, categoryId);
+        lqw.eq(SetMeal::getStatus, 1);
+        lqw.orderByDesc(SetMeal::getUpdateTime);
+        return R.success(setMealService.list(lqw));
+    }
+
+    /**
+     * 获取套餐详情
+     */
+    @GetMapping("/dish")
+    public R<List<SetMealDish>> getDishDetails(Long setMealId) {
+        var lqw = new LambdaQueryWrapper<SetMealDish>();
+        lqw.eq(SetMealDish::getSetMealId, setMealId);
+        return R.success(setMealDishService.list(lqw));
     }
 }

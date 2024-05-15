@@ -193,3 +193,50 @@ create table address_book
     create_user     bigint       null     default null,
     update_user     bigint       null     default null
 );
+
+drop table if exists shopping_cart;
+create table shopping_cart
+(
+    id          bigserial      not null primary key,
+    name        varchar(32)    null     default null,
+    user_id     bigint         not null,
+    dish_id     bigint         null     default null,
+    set_meal_id bigint         null     default null,
+    dish_flavor varchar(8)[]   null     default null, -- 这里使用了 pgsql 提供的数组类型
+    number      int            not null default 1,
+    amount      decimal(10, 2) not null,
+    create_time TIMESTAMP      null     default null,
+    image       varchar(256)   null     default null
+);
+
+drop table if exists orders;
+create table orders
+(
+    id              bigserial      not null primary key,
+    number          varchar(32)    null     default null,
+    status          int            not null default 1,
+    user_id         bigint         not null,
+    address_book_id bigint         not null,
+    order_time      TIMESTAMP      not null,
+    checkout_time   TIMESTAMP      not null,
+    pay_method      int            not null default 1,
+    amount          decimal(10, 2) not null,
+    remark          varchar(256)   null     default null,
+    phone           varchar(11)    null     default null,
+    address         varchar(256)   null     default null,
+    consignee       varchar(32)    null     default null
+);
+
+drop table if exists order_detail;
+create table order_detail
+(
+    id          bigserial      not null primary key,
+    name        varchar(32)    null     default null,
+    order_id     bigint         not null,
+    dish_id     bigint         null     default null,
+    set_meal_id bigint         null     default null,
+    dish_flavor varchar(8)[]   null     default null, -- 这里使用了 pgsql 提供的数组类型
+    number      int            not null default 1,
+    amount      decimal(10, 2) not null,
+    image       varchar(256)   null     default null
+);
