@@ -1,0 +1,214 @@
+.continue {
+  border-color: #333333 !important;
+  background: #333333 !important;
+  color: #ffffff !important;
+
+  &:hover {
+    background-color: #999999 !important;
+    border-color: #999999 !important;
+    color: #ffffff !important;
+  }
+
+  &active {
+    background-color: #2a2a2a !important;
+    border-color: #2a2a2a !important;
+    color: #ffffff !important;
+  }
+}
+
+.dashboard-container {
+  padding: 20px;
+
+  .container {
+    background: #fff;
+    position: relative;
+    z-index: 1;
+    padding: 30px 28px;
+    border-radius: 4px;
+
+    .tableBar {
+      display: flex;
+      margin-bottom: 20px;
+      justify-content: space-between;
+    }
+
+    .tableBox {
+      width: 100%;
+      border: solid 2px #f3f4f7;
+      border-radius: 2px;
+    }
+
+    .tableLab .span-btn {
+      cursor: pointer;
+      display: inline-block;
+      font-size: 14px;
+      padding: 0 20px;
+      color: #818693;
+      border-right: solid 1px #d8dde3;
+    }
+  }
+}
+
+.addBrand-container {
+  margin: 30px;
+
+  :deep(.el-form--inline .el-form-item__content) {
+    width: 293px;
+  }
+
+  :deep(.el-input) {
+    width: 293px;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    background: #fff;
+    padding: 30px;
+    border-radius: 4px;
+    min-height: 500px;
+
+    .subBox {
+      padding-top: 30px;
+      text-align: center;
+      border-top: solid 1px #f3f4f7;
+    }
+  }
+
+  .address :deep(.el-form-item__content) {
+    width: 777px !important;
+  }
+}
+
+.pagination {
+  text-align: center !important;
+  margin-top: 30px;
+  justify-content: center;
+}
+
+
+#food-add-app .uploadImg .el-form-item__label::before {
+  content: '*';
+  color: #F56C6C;
+  margin-right: 4px;
+}
+
+.flavorBox {
+  width: 777px;
+
+  .addBut {
+    background: #ffc200;
+    display: inline-block;
+    padding: 0 20px;
+    line-height: 40px;
+    cursor: pointer;
+    border-radius: 4px;
+    color: #333333;
+    font-weight: 500;
+  }
+
+  .flavor {
+    border: solid 1px #dfe2e8;
+    border-radius: 3px;
+    padding: 15px;
+    background: #fafafb;
+    width: inherit;
+
+    .title {
+      color: #606168;
+    }
+
+    .cont .items {
+      display: flex;
+      margin: 10px 0;
+
+      .itTit {
+        width: 150px;
+        margin-right: 15px;
+
+        input {
+          width: 100%;
+          line-height: 40px;
+          border-radius: 3px;
+          padding: 0 10px;
+        }
+
+        .selectInput {
+          position: relative;
+          width: 100%;
+          min-width: 100px;
+
+          .flavorSelect {
+            position: absolute;
+            width: 100%;
+            padding: 0 10px;
+            border-radius: 3px;
+            border: solid 1px #FF903D;
+            line-height: 30px;
+            text-align: center;
+            background: #fff;
+            top: 50px;
+            z-index: 99;
+
+            .items {
+              cursor: pointer;
+              display: inline-block;
+              width: 100%;
+              line-height: 35px;
+              border-bottom: solid 1px #f4f4f4;
+              color: #666;
+            }
+
+            .none {
+              font-size: 14px;
+            }
+          }
+        }
+      }
+
+      .labItems {
+        flex: 1;
+        display: flex;
+        flex-wrap: wrap;
+        border-radius: 3px;
+        min-height: 39px;
+        border: solid 1px #d8dde3;
+        background: #fff;
+        padding: 0 5px;
+
+        span {
+          display: inline-block;
+          color: #f19c59;
+          margin: 5px;
+          line-height: 26px;
+          height: 26px;
+          padding: 0 10px;
+          background: #fdf4eb;
+          border-radius: 3px;
+          border: solid 1px #fae2cd;
+
+          i {
+            cursor: pointer;
+            font-style: normal;
+          }
+        }
+
+        .inputBox {
+          display: inline-block;
+          width: 100%;
+          height: 36px;
+          line-height: 36px;
+          overflow: hidden;
+          flex: 1;
+        }
+      }
+
+      .delFlavor {
+        display: inline-block;
+        padding: 0 10px;
+        color: #f56c6c;
+        cursor: pointer;
+      }
+    }
+  }
+}

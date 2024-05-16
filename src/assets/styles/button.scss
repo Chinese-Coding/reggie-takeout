@@ -1,0 +1,53 @@
+:deep(.el-button + .el-button) {
+  margin-left: 10px;
+}
+
+:deep(.el-button--primary) {
+  // 按钮文本颜色
+  --el-button-text-color: #333333;
+
+  // 按钮 active 时的颜色
+  --el-button-active-color: #333333;
+  --el-button-hover-text-color: #333333;
+  --el-button-hover-link-text-color: #333333;
+}
+
+:deep(.el-button--small) {
+  padding: 9px 5px 0 5px !important; // 通过修改这个组件终于让显示效果与原项目保持一致
+}
+
+// 修改按钮样式
+.update-button {
+  color: #419eff !important;
+  position: relative;
+
+  &:after {
+    content: "";
+    position: absolute;
+    right: -6px;
+    height: 14px;
+    width: 0;
+    // border-right: solid 1px #ebeef5 !important; // 还是把这个分割线去掉了, 感觉不是很好看
+  }
+}
+
+
+// 删除 or 禁用 按钮样式
+.delete-button {
+  color: #f56c6c !important;
+  position: relative;
+
+  &:after {
+    content: "";
+    position: absolute;
+    right: -6px;
+    height: 14px;
+    width: 0;
+    border-right: solid 1px #ebeef5 !important;
+  }
+}
+
+// 定义不显示后面的一个竖线 (分隔符)
+.no-border-right::after {
+  display: none;
+}

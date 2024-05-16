@@ -1,0 +1,49 @@
+:deep(.el-menu) {
+  border: none;
+  height: 100%;
+  width: 100% !important;
+}
+
+:deep(.el-menu-item) {
+  color: #aeb5c4;
+  height: 42px;
+  line-height: 42px;
+  padding: 0 0 0 32px !important;
+  margin: 0 34px 20px 0;
+  border-radius: 0 21px 21px 0 !important;
+
+  &:hover {
+    color: #ffffff !important;
+    background-color: transparent !important;
+
+    span {
+      color: #ffffff !important;
+    }
+  }
+
+  &:active {
+    color: #333333 !important;
+    background-color: transparent !important;
+
+    span {
+      color: #333333 !important;
+    }
+  }
+
+  &.is-active {
+    background-color: #ffc200 !important;
+    color: #333333 !important;
+    border-radius: 0 21px 21px 0 !important;
+
+    span {
+      color: #333333 !important;
+      font-weight: 500 !important;
+    }
+  }
+
+  i {
+    color: inherit;
+    font-size: 20px;
+    margin-right: 5px;
+  }
+}

@@ -1,0 +1,39 @@
+:deep(.el-overlay) {
+  position: absolute !important;
+}
+
+:deep(.el-dialog) {
+  min-width: 568px !important;
+  position: relative;
+  border-radius: 8px !important;
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+  width: 30%;
+
+  --el-input-height: 38px;
+
+  .el-form-item__label {
+    height: 42px;
+    line-height: 42px;
+  }
+}
+
+:deep(.el-dialog__header) {
+  padding: 15px 15px;
+  background: #fbfbfa;
+  border-radius: 8px 8px 0 0;
+  border-bottom: 2px solid #e5e4e4;
+
+  .el-dialog__title {
+    font-weight: bold;
+    color: #333333;
+  }
+}
+
+:deep(.el-dialog__body) {
+  padding: 43px 90px 21px;
+  color: #818693;
+  font-size: 14px;
+  word-break: break-all;
+}

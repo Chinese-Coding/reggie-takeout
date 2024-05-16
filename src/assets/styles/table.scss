@@ -1,0 +1,14 @@
+// 增加边框宽度
+:deep(.el-table .cell,
+.el-table th div,
+.el-table--border td:first-child .cell,
+.el-table--border th:first-child .cell) {
+  padding: 6px 0 6px 30px !important;
+}
+
+// 多选框样式
+:deep(.el-table-column--selection .cell) {
+  padding-left: 10px !important;
+  padding-right: 0 !important;
+  text-overflow: clip !important;
+}
