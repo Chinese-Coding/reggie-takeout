@@ -24,24 +24,8 @@ watch(() => pageSize.value, () => {
 })
 
 export function getImage(image: string) {
-    return `/download?name=${image}`
+    return `/api/download?name=${image}`
 }
-
-// export function handleSizeChange(value: number, init: Function = () => {
-// }) {
-//     console.log(value);
-//     console.log(pageSize.value);
-//     // pageSize.value = value;
-//     init()
-// }
-//
-// export function handleCurrentChange(value: number, init: Function = () => {
-// }) {
-//     console.log(value);
-//     console.log(page.value);
-//     // page.value = value;
-//     init()
-// }
 
 /**
  * 获取 URL 地址上面的参数

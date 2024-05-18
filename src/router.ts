@@ -39,10 +39,10 @@ const router = createRouter({
                     path: '/setMeal',
                     component: () => import('./components/setMeal/SetMeal.vue')
                 },
-        //         {
-        //             path: '/setMeal/add',
-        //             component: () => import('./components/SetMealTable.vue')
-        //         }
+                {
+                    path: '/setMeal/add',
+                    component: () => import('./components/setMeal/SetMealTable.vue')
+                }
             ]
         }
     ]

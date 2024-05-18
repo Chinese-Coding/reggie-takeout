@@ -38,8 +38,7 @@ async function getSetMeals(pageValue: number | undefined = undefined) {
       total.value = r.data.total
     } else
       throw new Error(r.msg || '操作失败')
-  }
-  catch (e: any) {
+  } catch (e: any) {
     ElMessage.error('出错了: ' + e.message);
   }
 }
@@ -163,8 +162,7 @@ function handleSelectionChange(val: any) {
         <el-table-column prop="name" label="套餐名称"/>
         <el-table-column prop="image" label="图片" align="center">
           <template #default="scope">
-            <el-image style="width: auto; height: 40px; border:none;cursor: pointer;"
-                      :src="getImage(scope.row.image)"
+            <el-image style="width: auto; height: 40px; border:none;cursor: pointer;" :src="getImage(scope.row.image)"
                       :preview-src-list="[ `/api/download?name=${scope.row.image}` ]">
               <template #error>
                 <img src="@/assets/images/noImg.png" style="width: auto; height: 40px; border:none;" alt="">

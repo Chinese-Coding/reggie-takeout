@@ -360,9 +360,8 @@ function submitForm(_continue: boolean) {
         <div>
           <el-form-item label="菜品图片:" prop="region">
             <!-- FIXME: 有意思, 这个地方竟然还要设置成 `/api/upload` 才能上传成功-->
-            <el-upload class="avatar-uploader" action="/api/upload"
-                       :show-file-list="false" :on-success="handleAvatarSuccess"
-                       :on-change="onChange">
+            <el-upload class="avatar-uploader" action="/api/upload" :show-file-list="false"
+                       :on-success="handleAvatarSuccess" :on-change="onChange">
               <img v-if="imageURL" :src="imageURL" class="avatar" alt=""/>
               <el-icon v-else class="avatar-uploader-icon">
                 <Plus/>
@@ -425,6 +424,7 @@ function submitForm(_continue: boolean) {
     border-color: #ffc200;
   }
 }
+
 :deep(.el-icon.avatar-uploader-icon) {
   font-size: 28px;
   color: #8c939d;
@@ -442,11 +442,13 @@ function submitForm(_continue: boolean) {
     line-height: 40px;
   }
 }
+
 :deep(.el-select) {
   .el-select__wrapper {
     height: 40px;
     line-height: 40px;
   }
+
   width: 293px;
 }
 </style>
