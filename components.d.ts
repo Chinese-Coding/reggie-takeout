@@ -16,7 +16,9 @@ declare module 'vue' {
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']
     ElCheckboxGroup: typeof import('element-plus/es')['ElCheckboxGroup']
     ElContainer: typeof import('element-plus/es')['ElContainer']
+    ElDatePicker: typeof import('element-plus/es')['ElDatePicker']
     ElDialog: typeof import('element-plus/es')['ElDialog']
+    ElDivider: typeof import('element-plus/es')['ElDivider']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElHeader: typeof import('element-plus/es')['ElHeader']
@@ -37,9 +39,13 @@ declare module 'vue' {
     Employee: typeof import('./src/components/employee/Employee.vue')['default']
     EmployeeTable: typeof import('./src/components/employee/EmployeeTable.vue')['default']
     Login: typeof import('./src/components/Login.vue')['default']
+    Order: typeof import('./src/components/Order.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     SetMeal: typeof import('./src/components/setMeal/SetMeal.vue')['default']
     SetMealTable: typeof import('./src/components/setMeal/SetMealTable.vue')['default']
+  }
+  export interface ComponentCustomProperties {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

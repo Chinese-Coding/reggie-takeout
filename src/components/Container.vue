@@ -2,7 +2,7 @@
 import axiosRequest from "@/utils/axiosRequest.ts";
 import router from "@/router.ts";
 import {UserFilled, Menu, Dish, Present, Tickets} from "@element-plus/icons-vue";
-import {goBack, goBackFlag, headTitle, reloadHeader} from "@/ts/container.ts";
+import {goBack, goBackFlag, headTitle} from "@/ts/container.ts";
 import {onMounted, ref} from "vue";
 
 interface Menu {
@@ -42,7 +42,7 @@ let menuList = [
   {
     id: '5',
     name: '订单明细',
-    url: 'page/order/list.html',
+    url: '/order',
     icon: Tickets
   }
 ];

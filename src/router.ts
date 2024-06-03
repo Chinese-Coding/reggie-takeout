@@ -42,6 +42,10 @@ const router = createRouter({
                 {
                     path: '/setMeal/add',
                     component: () => import('./components/setMeal/SetMealTable.vue')
+                },
+                {
+                    path: '/order',
+                    component: () => import('./components/Order.vue')
                 }
             ]
         }
