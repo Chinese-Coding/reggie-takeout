@@ -14,6 +14,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/order")
 public class OrderController {
@@ -75,5 +77,39 @@ public class OrderController {
         ).toList();
         orderDtoPageInfo.setRecords(list);
         return R.success(orderDtoPageInfo);
+    }
+
+    @GetMapping("/page")
+    public R<Page> page(int page, int pageSize, String number, LocalDateTime beginTime, LocalDateTime endTime) {
+        var orderPageInfo = new Page<Order>(page, pageSize);
+        var orderDtoPageInfo = new Page<OrderDto>(page, pageSize);
+        var lqw = new LambdaQueryWrapper<Order>(); // 条件构造器
+        lqw.eq(number != null, Order::getNumber, number)
+                .between(beginTime != null && endTime != null, Order::getOrderTime, beginTime, endTime);
+
+        lqw.orderByDesc(Order::getOrderTime); // 添加排序条件
+        orderService.page(orderPageInfo, lqw);
+        BeanUtils.copyProperties(orderPageInfo, orderDtoPageInfo, "records");
+        var records = orderPageInfo.getRecords();
+        var list = records.stream().map(
+                (item) -> {
+                    var orderDto = new OrderDto();
+                    BeanUtils.copyProperties(item, orderDto);
+                    var orderId = item.getId();
+                    var orderDetailLqw = new LambdaQueryWrapper<OrderDetail>();
+                    orderDetailLqw.eq(OrderDetail::getOrderId, orderId);
+                    var orderDetail = orderDetailService.list(orderDetailLqw);
+                    orderDto.setOrderDetails(orderDetail);
+                    return orderDto;
+                }
+        ).toList();
+        orderDtoPageInfo.setRecords(list);
+        return R.success(orderDtoPageInfo);
+    }
+
+    @PutMapping
+    public R<String> update(Order order) {
+        orderService.updateById(order);
+        return R.success("修改成功");
     }
 }
