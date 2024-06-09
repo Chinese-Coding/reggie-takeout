@@ -4,10 +4,12 @@ package cn.bupt.edu.zfq.reggietakeout.entity.dto;
 import cn.bupt.edu.zfq.reggietakeout.entity.Order;
 import cn.bupt.edu.zfq.reggietakeout.entity.OrderDetail;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class OrderDto extends Order {
 
     private String userName;

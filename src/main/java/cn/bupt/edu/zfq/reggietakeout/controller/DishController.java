@@ -1,7 +1,6 @@
 package cn.bupt.edu.zfq.reggietakeout.controller;
 
 import cn.bupt.edu.zfq.reggietakeout.common.R;
-import cn.bupt.edu.zfq.reggietakeout.entity.Category;
 import cn.bupt.edu.zfq.reggietakeout.entity.Dish;
 import cn.bupt.edu.zfq.reggietakeout.entity.DishFlavor;
 import cn.bupt.edu.zfq.reggietakeout.entity.dto.DishDto;
@@ -17,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @RestController

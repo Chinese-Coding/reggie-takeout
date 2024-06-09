@@ -5,7 +5,10 @@ spring:
         driver-class-name: org.postgresql.Driver
         url: jdbc:postgresql://localhost:5432/reggie
         username: postgres
-        password: 18054566672
+        password: postgres
+    threads:
+        virtual:
+            enabled: true
 
 mybatis-plus:
     configuration:
@@ -18,4 +21,4 @@ logging:
     level:
         root: info
 reggie:
-    path: D:\images\
+    path: ~/images
