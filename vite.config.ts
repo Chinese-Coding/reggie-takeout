@@ -25,9 +25,12 @@ export default defineConfig({
     },
     // 配置代理, 解决跨域问题, 配置后, 不必再在脚本内部写 `http://localhost:8080`, 不过需要在具体的请求链接之前加上 `/api`
     server: {
+        host: '0.0.0.0',
+        port: 5174,
         proxy: {
             '/api': {
-                target: 'http://localhost:8080', // 目标请求地址
+                target: 'http://123.249.11.155:8080', // 目标请求地址
+                // target: 'http://localhost:8080', // 目标请求地址
                 changeOrigin: true, //允许跨域
                 rewrite: (path) => path.replace(/^\/api/, '') // 去除请求中的 `/api`
             }

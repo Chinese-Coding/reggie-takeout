@@ -7,6 +7,10 @@ const router = createRouter({
     history: createWebHistory(), // 告诉路由器, 使用 history 模式
     routes: [ // 告诉路由器, 要呈现的组件
         {
+            path: '/',
+            component: () => import('./components/Main.vue')
+        },
+        {
             path: '/index',
             component: () => import('./components/Main.vue')
         },
