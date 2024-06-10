@@ -28,9 +28,13 @@ export default defineConfig({
         }
     },
     server: {
+        host: '0.0.0.0',
+        port: 5173,
+        open: true,
         proxy: {
             '/api': {
-                target: 'http://localhost:8080', // 目标请求地址
+                target: 'http://123.249.11.155:8080', // 目标请求地址
+                // target: 'http://localhost:8080', // 目标请求地址
                 changeOrigin: true, //允许跨域
                 rewrite: (path) => path.replace(/^\/api/, '') // 去除请求中的 `/api`
             }

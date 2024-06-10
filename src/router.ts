@@ -7,6 +7,10 @@ const router = createRouter({
     history: createWebHistory(), // 告诉路由器, 使用 history 模式
     routes: [ // 告诉路由器, 要呈现的组件
         {
+            path: '/',
+            redirect: '/login'
+        },
+        {
             path: '/login',
             component: () => import('./components/Login.vue') // 动态导入 (懒加载), 提高性能
         },

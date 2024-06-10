@@ -234,7 +234,7 @@ function submitForm(_continue: boolean) {
       if (actionType.value == 'add') {
         try {
           let r = await axiosRequest({
-            url: '/dish/add',
+            url: '/dish',
             method: 'post',
             data: params
           })
