@@ -30,7 +30,6 @@ export default defineConfig({
     server: {
         host: '0.0.0.0',
         port: 5173,
-        open: true,
         proxy: {
             '/api': {
                 target: 'http://123.249.11.155:8080', // 目标请求地址
