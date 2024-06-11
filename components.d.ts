@@ -11,6 +11,7 @@ declare module 'vue' {
     Address: typeof import('./src/components/Address.vue')['default']
     AddressEdit: typeof import('./src/components/AddressEdit.vue')['default']
     ElButton: typeof import('element-plus/es')['ElButton']
+    ElDialog: typeof import('element-plus/es')['ElDialog']
     ElImage: typeof import('element-plus/es')['ElImage']
     ElInput: typeof import('element-plus/es')['ElInput']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']

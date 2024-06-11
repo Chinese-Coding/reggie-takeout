@@ -41,7 +41,7 @@ async function btnLogin() {
       if (r.code == 1) {
         sessionStorage.setItem("userPhone", form.value.phone)
         loading.value = false
-        router.push('/index')
+        await router.push('/index')
       } else
         throw new Error(r.msg)
 

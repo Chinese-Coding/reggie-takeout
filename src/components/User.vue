@@ -17,11 +17,29 @@ let order = ref([{
   sumNum: 0
 }])
 let userPhone = ref('')
+let userName = ref('')
 
 onMounted(() => {
   userPhone.value = <string>sessionStorage.getItem('userPhone')
+  getUserInfo()
   getLatestOrder()
 })
+
+async function getUserInfo() {
+  try {
+    let r = await axiosRequest({
+      url: '/user/info',
+      method: 'get'
+    })
+
+    if (r.code == 1) {
+      userName.value = r.data.name
+    } else
+      throw new Error(r.msg)
+  } catch (e: any) {
+    showNotify({type: 'warning', message: e.message});
+  }
+}
 
 async function getLatestOrder() {
   const params = {
@@ -33,7 +51,7 @@ async function getLatestOrder() {
     let r = await axiosRequest({
       url: '/order/userPage',
       method: 'get',
-      data: {...params}
+      params: {...params}
     })
 
     if (r.code == 1) {
@@ -86,7 +104,7 @@ async function toPageLogin() {
 }
 
 function goBack() {
-  router.go(-1)
+  router.push('/index')
 }
 
 function toAddressPage() {
@@ -125,12 +143,12 @@ function getStatus(status: number) {
   <div id="user" class="app">
     <div class="divHead">
       <div class="divTitle">
-        <i class="el-icon-arrow-left" @click="goBack"></i>个人中心
+        <i @click="goBack">个人中心</i>
       </div>
       <div class="divUser">
         <img src="../assets/images/headPage.png" alt=""/>
         <div class="desc">
-          <div class="divName">林之迷 <img src="../assets/images/women.png" alt=""/></div>
+          <div class="divName">{{ userName }} <img src="../assets/images/women.png" alt=""/></div>
           <div class="divPhone">{{ userPhone }}</div>
         </div>
       </div>
@@ -138,13 +156,13 @@ function getStatus(status: number) {
     <div class="divContent">
       <div class="divLinks">
         <div class="item" @click="toAddressPage">
-          <img src="../assets/images/locations.png"/>
+          <img src="../assets/images/locations.png" alt=""/>
           <span>地址管理</span>
           <i class="el-icon-arrow-right"></i>
         </div>
         <div class="divSplit"></div>
         <div class="item" @click="toOrderPage">
-          <img src="../assets/images/orders.png"/>
+          <img src="../assets/images/orders.png" alt=""/>
           <span>历史订单</span>
           <i class="el-icon-arrow-right"></i>
         </div>

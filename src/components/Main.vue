@@ -2,7 +2,7 @@
 import {ref} from "vue";
 import axiosRequest from "../utils/axiosRequest.ts";
 import router from "../router.ts";
-import {showNotify} from "vant";
+import {showNotify} from 'vant';
 import '@/utils/base.ts';
 import {onMounted, computed, watch} from "vue";
 
@@ -14,7 +14,7 @@ interface Cart {
   setMealId: string,
   // 菜品的口味信息, 注意这里叫 dishFlavor 而不是 flavors
   // 所以从 dish 添加到购物车中时要把 flavors 改成 dishFlavor
-  dishFlavor: string[],
+  flavors: string[],
   number: number,
   amount: number,
   image: string
@@ -67,7 +67,6 @@ let goodsNum = computed(() => {
     return num
   else
     return '99+'
-
 })
 
 // 实施计算购物车中物品的价格
@@ -80,13 +79,11 @@ let goodsPrice = computed(() => {
 })
 
 watch(() => dialogFlavor.value.show, (flag) => {
-  const divCart = document.querySelector('.divCart') as HTMLElement
-  console.log("跳转到 watch 函数中来, flag", flag)
   if (flag)
-    divCart.style.zIndex = String(1)
+    document.querySelector('.divCart').style.zIndex = 1
   else
-    divCart.style.zIndex = String(3000)
-  console.log("跳转到 watch 函数中来, divCart.style.zIndex", divCart.style.zIndex)
+    document.querySelector('.divCart').style.zIndex = 3000
+  console.log(document.querySelector('.divCart').style.zIndex)
 })
 
 //获取所有的菜品分类
@@ -107,7 +104,7 @@ function cartListApi(data: any) {
 }
 
 async function getDishOrSetMealList(categoryId: string, type: number) {
-  let url = '';
+  let url: any;
   if (type == 1)
     url = '/dish/list'
   else
@@ -189,15 +186,82 @@ async function getCartData() {
 }
 
 // 购物车中增加商品数量
-async function cartNumAdd(item: any) {
-  await addCart(item)
+async function cartNumAdd(item: Cart) {
+  try {
+    let r = await axiosRequest({
+      url: '/shoppingCart/add',
+      method: 'post',
+      data: item
+    })
+    // 成功向后端发送数据后, 根据后端返回的数据对购物车数据进行同步
+    if (r.code == 1) {
+      dishList.value.forEach(dish => {
+        if (dish.id === item.id)
+          dish.number = r.data.number
+      })
+      if (setMealDialog.value.show)
+        item.number = r.data.number
+
+      await getCartData()
+    } else
+      throw new Error(r.msg)
+  } catch (e: any) {
+    showNotify({type: 'warning', message: e.message});
+  }
+}
+
+async function subCart(params: any, item: any) {
+  console.log(params)
+  try {
+    let r = await axiosRequest({
+      url: '/shoppingCart/sub',
+      method: 'delete',
+      params: params
+    })
+
+    if (r.code == 1) { // 删除成功, 则把购物车里的东西也一并删除掉
+      dishList.value.forEach(dish => {
+        if (dish.id === item.id)
+          dish.number = (r.data.number === 0 ? undefined : r.data.number)
+      })
+      if (setMealDialog.value.show)
+        item.number = (r.data.number === 0 ? undefined : r.data.number)
+      await getCartData()
+    } else
+      throw new Error(r.msg)
+  } catch (e) {
+    showNotify({type: 'warning', message: e.message});
+  }
 }
 
 // 购物车中减少商品数量
-async function cartNumberSubtract(item: any) {
-  await subtractCart(item)
+// 购物车界面中减少商品数量
+function subCartInCartFace(item: Cart) {
+  let params: {}
+  if (item.dishId)
+    params = {
+      dishId: item.dishId,
+    }
+  else if (item.setMealId)
+    params = {
+      setMealId: item.setMealId,
+    }
+  subCart(params, item)
 }
 
+// 主界面减少商品数量
+function subCartInMainFace(item: any) {
+  let params: {}
+  if (Array.isArray(item.flavors))
+    params = {
+      dishId: item.id,
+    }
+  else
+    params = {
+      setMealId: item.id,
+    }
+  subCart(params, item)
+}
 
 // 清空购物车
 async function clearCart() {
@@ -226,7 +290,6 @@ async function clearCart() {
  * @param item
  */
 function chooseFlavor(item: any) {
-  console.log("跳转到 chooseFlavor 中来了")
   // TODO: 为什么有这部分代码呢?
   // dialogFlavor.value = {
   //   name: '',
@@ -235,6 +298,7 @@ function chooseFlavor(item: any) {
   //   price: undefined,
   //   show: false
   // }
+  console.log(item.flavors)
   dialogFlavor.value = {
     name: item.name,
     flavors: item.flavors,
@@ -243,7 +307,6 @@ function chooseFlavor(item: any) {
     show: true,
     image: item.image
   }
-  console.log("dialogFlavor.value: ", dialogFlavor.value)
 }
 
 function flavorClick(flavor: any, item: any) {
@@ -267,6 +330,7 @@ function dialogFlavorAddCart() {
       showNotify({type: 'warning', message: '请选择' + item.name});
     }
   })
+
   if (flag) {
     addCart({
       price: dialogFlavorValue.price,
@@ -299,7 +363,6 @@ async function dishDetails(item: any) {
   console.log("跳转到 dishDetails 中来了")
   console.log("item: ", item)
   // 先清除对象数据，如果不行的话dialog使用v-if
-  detailsDialog.value.item = {}
   setMealDialog.value.item = {}
   if (Array.isArray(item.flavors)) {
     console.log("item.flavors: ", item.flavors)
@@ -310,8 +373,11 @@ async function dishDetails(item: any) {
     // 显示套餐的数据
     try {
       let r = await axiosRequest({
-        url: `/setMeal/dish/${item.id}`,
+        url: '/setMeal/dish',
         method: 'get',
+        params: {
+          setMealId: item.id
+        }
       })
 
       if (r.code == 1) {
@@ -326,15 +392,17 @@ async function dishDetails(item: any) {
 }
 
 // 菜单中往购物车中添加商品
-async function addCart(item: any) {
+async function addCart(item: Dish) {
   let params = {
-    amount: item.price / 100,//金额
-    dishFlavor: item.dishFlavor, //口味  如果没有传undefined
+    name: item.name,
     dishId: undefined,//菜品id
     setMealId: undefined,//套餐id
-    name: item.name,
+    dishFlavor: item.flavors, // 口味  如果没有传undefined
+    // 后端 ShoppingCart 中的 number 字段没有, 由后端自行判断
+    amount: item.price / 100, // 金额
     image: item.image
   }
+
   // 如果有口味, 则说明时菜品, 否则说明是套餐
   if (Array.isArray(item.flavors))
     params.dishId = item.id
@@ -364,40 +432,6 @@ async function addCart(item: any) {
   }
 }
 
-// 菜单中减少选中的商品
-// TODO: 后端的处理逻辑是将该物品清零
-async function subtractCart(item: any) {
-  let params: {}
-  if (Array.isArray(item.flavors))
-    params = {
-      dishId: item.id,
-    }
-  else
-    params = {
-      setMealId: item.id,
-    }
-
-  try {
-    let r = await axiosRequest({
-      url: '/shoppingCart/sub',
-      method: 'post',
-      params: params
-    })
-
-    if (r.code == 1) { // 删除成功, 则把购物车里的东西也一并删除掉
-      dishList.value.forEach(dish => {
-        if (dish.id === item.id)
-          dish.number = (r.data.number === 0 ? undefined : r.data.number)
-      })
-      if (setMealDialog.value.show)
-        item.number = (r.data.number === 0 ? undefined : r.data.number)
-      await getCartData()
-    } else
-      throw new Error(r.msg)
-  } catch (e) {
-    showNotify({type: 'warning', message: e.message});
-  }
-}
 
 // 展开购物车
 function openCart() {
@@ -502,7 +536,7 @@ function changeCate(index: any, id: string, type: number) {
               <!-- 用户选择该菜品的个数 -->
               <div class="divNum">
                 <div class="divSubtract" v-if="item.number > 0">
-                  <img src="../assets/images/subtract.png" @click.prevent.stop="subtractCart(item)" alt=""/>
+                  <img src="../assets/images/subtract.png" @click.prevent.stop="subCartInMainFace(item)" alt=""/>
                 </div>
                 <div class="divDishNum">{{ item.number }}</div>
                 <div class="divTypes" v-if="item.flavors && item.flavors.length > 0 && !item.number "
@@ -513,7 +547,6 @@ function changeCate(index: any, id: string, type: number) {
                 </div>
               </div>
             </div>
-
           </div>
         </div>
       </div>
@@ -545,7 +578,8 @@ function changeCate(index: any, id: string, type: number) {
       </div>
     </div>
 
-    <van-dialog v-model="dialogFlavor.show" :show-confirm-button="false" class="dialogFlavor" ref="flavorDialog">
+    <!-- 菜品口味 :show-confirm-button="false"  -->
+    <van-dialog v-model:show="dialogFlavor.show" class="dialogFlavor">
       <div class="dialogTitle">{{ dialogFlavor.name }}</div>
       <div class="divContent">
         <div v-for="flavor in dialogFlavor.flavors" :key="flavor.id">
@@ -555,11 +589,6 @@ function changeCate(index: any, id: string, type: number) {
                 :class="{spanActive:flavor.dishFlavor === item}">
                       {{ item }}
           </span>
-
-          <!--          <span v-for="item in JSON.parse(flavor.value)" :key="item" @click="flavorClick(flavor,item)"-->
-          <!--                :class="{spanActive:flavor.dishFlavor === item}">-->
-          <!--            {{ item }}-->
-          <!--          </span>-->
         </div>
       </div>
       <div class="divBottom">
@@ -571,13 +600,15 @@ function changeCate(index: any, id: string, type: number) {
       </div>
     </van-dialog>
 
-    <van-popup v-model="cartDialogShow" position="bottom" :style="{ height: '50%' }" class="dialogCart">
+    <!-- 购物车 -->
+    <van-popup v-model:show="cartDialogShow" position="bottom" :style="{ height: '50%' }" class="dialogCart">
       <div class="divCartTitle">
         <div class="title">购物车</div>
         <div class="clear" @click="clearCart">
           <i class="el-icon-delete"/> 清空
         </div>
       </div>
+
       <div class="divCartContent">
         <div v-for="item in cartData" :key="item.id" class="divCartItem">
           <el-image :src="imgPathConvert(item.image)">
@@ -585,28 +616,32 @@ function changeCate(index: any, id: string, type: number) {
               <img src="../assets/images/noImg.png" alt=""/>
             </div>
           </el-image>
+
           <div class="divDesc">
             <div class="name">{{ item.name }}</div>
             <div class="price">
               <span class="spanMoney">￥</span>{{ item.amount }}
             </div>
           </div>
+
           <div class="divNum">
             <div class="divSubtract">
-              <img src="../assets/images/subtract.png" @click="cartNumberSubtract(item)" alt=""/>
+              <img src="../assets/images/subtract.png" @click="subCartInCartFace(item)" alt=""/>
             </div>
             <div class="divDishNum">{{ item.number }}</div>
             <div class="divAdd">
               <img src="../assets/images/add.png" @click="cartNumAdd(item)" alt=""/>
             </div>
           </div>
-          <div class="divSplit"></div>
+
+          <!--          <div class="divSplit"></div> -->
         </div>
       </div>
     </van-popup>
 
-    <!-- 菜品详情页 -->
-    <van-dialog  v-if="detailsDialog.show" :show-confirm-button="false" class="detailsDialog">
+
+    <!-- 菜品详情页  :show-confirm-button="false" -->
+    <van-dialog v-model:show="detailsDialog.show" class="detailsDialog">
       <div class="divContainer">
         <el-image :src="imgPathConvert(detailsDialog.item.image)">
           <div slot="error" class="image-slot">
@@ -623,7 +658,7 @@ function changeCate(index: any, id: string, type: number) {
         </div>
         <div class="right">
           <div class="divSubtract" v-if="detailsDialog.item.number > 0">
-            <img src="../assets/images/subtract.png" @click="subtractCart(detailsDialog.item)"/>
+            <img src="../assets/images/subtract.png" @click="subCartInMainFace(detailsDialog.item)" alt=""/>
           </div>
           <div class="divDishNum">{{ detailsDialog.item.number }}</div>
           <div class="divTypes"
@@ -631,7 +666,7 @@ function changeCate(index: any, id: string, type: number) {
                @click="chooseFlavor(detailsDialog.item)">选择规格
           </div>
           <div class="divAdd" v-else>
-            <img src="../assets/images/add.png" @click="addCart(detailsDialog.item)"/>
+            <img src="../assets/images/add.png" @click="addCart(detailsDialog.item)" alt=""/>
           </div>
         </div>
       </div>
@@ -641,8 +676,8 @@ function changeCate(index: any, id: string, type: number) {
       </div>
     </van-dialog>
 
-    <van-dialog v-model="setMealDialog.show" :show-confirm-button="false" class="setMealDetailsDialog"
-                ref="setMealDetailsDialogd" v-if="setMealDialog.show">
+    <!-- 套餐详情 :show-confirm-button="false"  -->
+    <van-dialog v-model:show="setMealDialog.show" class="setMealDetailsDialog">
       <div class="divContainer">
         <div class="title">{{ setMealDialog.item.name }}</div>
         <div class="item" v-for="(item,index) in setMealDialog.item.list" :key="index">
@@ -666,7 +701,7 @@ function changeCate(index: any, id: string, type: number) {
         </div>
         <div class="right">
           <div class="divSubtract" v-if="setMealDialog.item.number > 0">
-            <img src="../assets/images/subtract.png" @click="subtractCart(setMealDialog.item)" alt=""/>
+            <img src="../assets/images/subtract.png" @click="subCartInMainFace(setMealDialog.item)" alt=""/>
           </div>
           <div class="divDishNum">{{ setMealDialog.item.number }}</div>
           <div class="divAdd" v-if="setMealDialog.item.number">
@@ -685,4 +720,15 @@ function changeCate(index: any, id: string, type: number) {
 <style scoped lang="scss">
 @use "@/assets/styles/login.scss" as *;
 @use "@/assets/styles/main.scss" as *;
+
+.divDishNum {
+  font-size: 15rem;
+  font-family: PingFangSC, PingFangSC-Regular;
+  font-weight: 500;
+  text-align: center;
+  color: #333333;
+  line-height: 36rem;
+  letter-spacing: 0;
+  width: auto;
+}
 </style>

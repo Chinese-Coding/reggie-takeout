@@ -6,6 +6,6 @@ import 'vant/lib/index.css';
 import 'element-plus/dist/index.css'
 import 'vant/es/notify/style'
 import 'vant/es/toast/style'
-import {Dialog} from "vant"
+import {Dialog, Popup} from "vant"
 
-createApp(App).use(router).use(Dialog).mount('#app')
+createApp(App).use(router).use(Dialog).use(Popup).mount('#app')
