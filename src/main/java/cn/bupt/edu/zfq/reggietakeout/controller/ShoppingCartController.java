@@ -29,7 +29,7 @@ public class ShoppingCartController {
         log.info("购物车数据:{}", shoppingCart.toString());
         var userId = (Long) session.getAttribute("user");
         shoppingCart.setUserId(userId);
-        // 判断当前传来的Id是菜品还是套, 这两个肯定会有一个是Null
+        // 判断当前传来的Id是菜品还是套餐, 这两个肯定会有一个是Null
         Long dishId = shoppingCart.getDishId(),
                 setMealId = shoppingCart.getSetMealId();
 
@@ -45,6 +45,7 @@ public class ShoppingCartController {
         // 如果可以查出来，说明购物车已经加入了相关菜品
         var cartServiceOne = shoppingCartService.getOne(lqw);
 
+        // TODO: 这里为什么不计算菜品的价格?
         if (cartServiceOne != null) { // 已经存在在购物车里, 在数量原有基础上 +1
             var count = cartServiceOne.getNumber();
             cartServiceOne.setNumber(count + 1);
@@ -58,22 +59,31 @@ public class ShoppingCartController {
         return R.success(cartServiceOne);
     }
 
-    @PostMapping("/sub")
-    public R<String> sub(Long dishId, Long setMealId, HttpSession session) {
+    @DeleteMapping("/sub")
+    public R<ShoppingCart> sub(Long dishId, Long setMealId, HttpSession session) {
         var userId = (Long) session.getAttribute("user");
         var lqw = new LambdaQueryWrapper<ShoppingCart>();
+        ShoppingCart cart = null;
         if (dishId != null) {
             lqw.eq(ShoppingCart::getDishId, dishId);
             lqw.eq(ShoppingCart::getUserId, userId);
-            shoppingCartService.remove(lqw);
-            return R.success("成功删除");
+            cart = shoppingCartService.getOne(lqw);
         } else if (setMealId != null) {
             lqw.eq(ShoppingCart::getSetMealId, setMealId);
             lqw.eq(ShoppingCart::getUserId, userId);
-            shoppingCartService.remove(lqw);
-            return R.success("成功删除");
+            cart = shoppingCartService.getOne(lqw);
         }
-        return R.error("删除失败");
+        if (cart == null)
+            return R.error("购物车为空");
+
+        if (cart.getNumber() == 1) {
+            shoppingCartService.remove(lqw);
+            cart.setNumber(0);
+            return R.success(cart);
+        }
+        cart.setNumber(cart.getNumber() - 1);
+        shoppingCartService.updateById(cart);
+        return R.success(cart);
     }
 
     /**
@@ -98,7 +108,7 @@ public class ShoppingCartController {
     @DeleteMapping("/clean")
     public R<String> clean(HttpSession session) {
         var userId = (Long) session.getAttribute("user");
-        //获取当前购物车用户Id
+        // 获取当前购物车用户Id
         var lqw = new LambdaQueryWrapper<ShoppingCart>();
         lqw.eq(ShoppingCart::getUserId, userId);
         shoppingCartService.remove(lqw);

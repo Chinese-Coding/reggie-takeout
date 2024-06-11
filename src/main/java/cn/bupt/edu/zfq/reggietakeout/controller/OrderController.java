@@ -10,12 +10,14 @@ import cn.bupt.edu.zfq.reggietakeout.service.OrderService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
+@Slf4j
 @RestController
 @RequestMapping("/order")
 public class OrderController {
@@ -34,6 +36,7 @@ public class OrderController {
     public R<String> submit(@RequestBody Order order, HttpSession session) {
         // 比较繁琐, 在 service 实现
         orderService.submit(order, session);
+        log.info("order: {}", order);
         return R.success("下单成功");
     }
 

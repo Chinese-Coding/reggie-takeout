@@ -21,4 +21,4 @@ logging:
     level:
         root: info
 reggie:
-    path: ~/images
+    path: /root/images/

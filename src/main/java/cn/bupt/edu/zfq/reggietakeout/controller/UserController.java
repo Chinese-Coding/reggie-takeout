@@ -10,10 +10,7 @@ import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Random;
 
@@ -88,15 +85,26 @@ public class UserController {
         }
         return R.error("验证码错误");
     }
-        /**
-         * 随机生成指定长度字符串验证码
-         *
-         * @param length 长度
-         */
-        public static String generateValidateCode4String ( int length){
-            var rdm = new Random();
-            var hash1 = Integer.toHexString(rdm.nextInt());
-            return hash1.substring(0, length);
-        }
+
+    @GetMapping("/info")
+    public R<User> info(HttpSession session) {
+        var id = (Long) session.getAttribute("user");
+        var user = userService.getById(id);
+        if (user != null)
+            return R.success(user);
+
+        return R.error("用户信息获取失败");
     }
+
+    /**
+     * 随机生成指定长度字符串验证码
+     *
+     * @param length 长度
+     */
+    public static String generateValidateCode4String(int length) {
+        var rdm = new Random();
+        var hash1 = Integer.toHexString(rdm.nextInt());
+        return hash1.substring(0, length);
+    }
+}
 
