@@ -32,7 +32,7 @@ export default defineConfig({
         port: 5173,
         proxy: {
             '/api': {
-                // target: 'http://localhost:8080', // 目标请求地址
+                target: 'http://localhost:8080', // 目标请求地址
                 changeOrigin: true, //允许跨域
                 rewrite: (path) => path.replace(/^\/api/, '') // 去除请求中的 `/api`
             }
