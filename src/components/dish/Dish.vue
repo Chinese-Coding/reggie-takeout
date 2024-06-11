@@ -62,7 +62,7 @@ function deleteDish(type: string, id: string | null) {
   }).then(async () => {
     try {
       let r = await axiosRequest({
-        url: '/dish/delete',
+        url: '/dish',
         method: 'delete',
         params: {
           ids: type == '批量' ? selectedList.value.join(',') : id

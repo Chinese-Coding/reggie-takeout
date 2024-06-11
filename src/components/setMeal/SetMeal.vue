@@ -67,7 +67,7 @@ function deleteSetMeal(type: string, id: string | null) {
   }).then(async () => {
     try {
       let r = await axiosRequest({
-        url: '/setMeal/delete',
+        url: '/setMeal',
         method: 'delete',
         params: {
           ids: type == '批量' ? selectedList.value.join(',') : id
